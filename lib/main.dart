@@ -16,67 +16,46 @@ class MyApp extends StatelessWidget{
     debugShowCheckedModeBanner: false,
     title:'Flutter Practice',
     theme: ThemeData(primarySwatch:Colors.blue),
-    home:HomePage(),
+  
 
+    home: DefaultTabController(
+      length:2,
+      
+      child: Scaffold(
+        appBar: AppBar(
+        title: Text("flutter tabs"),
+        bottom: TabBar(
+          tabs: [
+            Tab(text:"home"),
+            Tab(text: "Profile"),
+          ],
+        ),
+        ),
+        body: TabBarView(
+  children: [
+              // TAB 1 → ListView
+              ListView.builder(
+                itemCount: 15,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text("Person ${index + 1}",
+                    textAlign: TextAlign.center,
+                   ), );
+                },
+              ),
+
+              // TAB 2 → Any widget
+              Center(child: Text("Profile Screen")),
+            ],
+),
+
+      )
+    ),
   );
   
 }
 }
 
-class HomePage extends StatefulWidget{
-//  const HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
 
-}
-class _HomePageState extends State<HomePage>{
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('My First Scaffold'),
-
-      ),
-
-      body: Center(
-        child: Text('Home Screen', style: TextStyle(fontSize: 22),
-        ),
-      ),
-
-      floatingActionButton: FloatingActionButton(onPressed: (){ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('FAB CLicked')),
-      );
-      },
-child: Icon(Icons.add),
-       ),
-        drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text(
-                'Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-}
