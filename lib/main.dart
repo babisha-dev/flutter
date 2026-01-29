@@ -1,61 +1,175 @@
-import 'package:flutter/material.dart';
+
+import "package:flutter/material.dart";
 
 void main(){
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget{
- // const MyApp({super.key});
+  const MyApp({super.key});
 
- 
-
-
-@override
+  @override
   Widget build(BuildContext context){
-  return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    title:'Flutter Practice',
-    theme: ThemeData(primarySwatch:Colors.blue),
-  
+    return MaterialApp(
+       home: HomeScreen(),
+       debugShowCheckedModeBanner: false,
+       theme: ThemeData(primarySwatch: Colors.indigo),
 
-    home: DefaultTabController(
-      length:2,
-      
-      child: Scaffold(
-        appBar: AppBar(
-        title: Text("flutter tabs"),
-        bottom: TabBar(
-          tabs: [
-            Tab(text:"home"),
-            Tab(text: "Profile"),
-          ],
-        ),
-        ),
-        body: TabBarView(
-  children: [
-              // TAB 1 → ListView
-              ListView.builder(
-                itemCount: 15,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Icon(Icons.person),
-                    title: Text("Person ${index + 1}",
-                    textAlign: TextAlign.center,
-                   ), );
-                },
-              ),
 
-              // TAB 2 → Any widget
-              Center(child: Text("Profile Screen")),
-            ],
-),
-
-      )
-    ),
-  );
-  
+    );
+  }
 }
-}
+class HomeScreen extends StatefulWidget{
+  const HomeScreen({super.key});
+  @override
+ State<HomeScreen> createState()=> _HomeScreenState();
+
+  }
+   
+   class _HomeScreenState extends State<HomeScreen>{
+
+    List<String> todo=[];
+    final TextEditingController _controller=TextEditingController();
+    int updateIndex=-1;
+
+    void addList(String task){
+      setState(() {
+        todo.add(task);
+        _controller.clear();
+      });
+    }
+    void updateList(String task, int  index){
+      setState(() {
+        todo[index]=task;
+        updateIndex=-1;
+        _controller.clear();
+      });
+    }
+    void deleteItem(int index){
+      setState(() {
+        todo.removeAt(index);
+      });
+    }
+
+    @override
+    Widget build(BuildContext context){
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("TO DO APP", style:  TextStyle(fontWeight: FontWeight.bold, fontSize: 25,),),
+            centerTitle: true,
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
+          ),
+          body: Container(
+      margin: EdgeInsets.all(10),
+      child: Column(
+        children: [
+          Expanded(
+            flex: 90,
+            child:  ListView.builder(
+              itemCount: todo.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  color: Colors.green,
+                  child: Container(
+                    margin: EdgeInsets.only(left:20),
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 80,
+                          child: Text(
+                            todo[index],
+                            style: TextStyle(
+                              color: Colors.amber,
+                             fontWeight: FontWeight.bold,
+                             fontSize: 20),
+                            
+                          ),
+                        ),
+                          IconButton(
+                               onPressed:(){
+                                setState(() {
+                                  _controller.clear();
+                                  _controller.text=todo[index];
+                                  updateIndex=index;
+                                });
+                               },
+
+                            icon:Icon(
+                              Icons.edit,
+                             size: 30,
+                             color: Colors.white,
+                            ),
+                          ),
+                        SizedBox(width: 10),
+
+                        IconButton(
+                          onPressed: (){
+                            deleteItem(index);
+                          },
+                         icon: Icon(Icons.delete, size: 30, color: Colors.white,),),
+                      ],
+                    ),
+                  ),
+                );
+              },
+
+            ),
+          
+          ),
+          Expanded(
+            flex: 10,
+            child:Row(
+               children: [
+                Expanded(flex:70,
+                child: SizedBox(
+                  height: 60,
+                child: TextFormField(
+                  controller: _controller,
+                  decoration:InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: Colors.green,
+                      )
+                    ),
+                    filled: true,
+                    labelText: 'Create Task..',
+                    labelStyle: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+
+                  ),
+                ),
+                ),
+
+                ),
+                SizedBox(width: 5),
+
+                FloatingActionButton(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+
+                  
+                  onPressed: (){
+                    updateIndex !=-1  ? updateList(_controller.text, updateIndex): addList(_controller.text);
+                  },
+                  child: Icon(updateIndex !=-1 ? Icons.edit : Icons.add),
+
+                ),
+               ],
+            ),     ),   ],
+      ),
+          ),
+        );
+
+    }   }
 
 
 
